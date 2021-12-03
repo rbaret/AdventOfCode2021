@@ -9,7 +9,7 @@ namespace AdventofCode
     {
         static void Main(string[] args)
         {
-            string path = ".\\Day1.txt";
+            string path = ".\\input.txt";
             List<int> values = Utility.ImportInput.ToIntList(path);
             Console.WriteLine(checkDepthIncreases(values));
             Console.WriteLine(CheckTripleDepthIncreases(values));
@@ -18,14 +18,14 @@ namespace AdventofCode
         // Exercise 1
         private static int checkDepthIncreases(List<int> values)
         {
-            int Increases = 0;
+            int increases = 0;
             int prevDepth = values.First(); // We load the initial depth instead of 0, the depth might be either negative or positive, who knows ?
             foreach(int depth in values){
                 if (depth>prevDepth)
-                    Increases++;
+                    increases++;
                 prevDepth = depth;
             }
-            return Increases;
+            return increases;
         }
 
         // Exercise 2
