@@ -2,29 +2,46 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-namespace Day1
+using Utility;
+namespace AdventofCode
 {
     class Program
     {
         static void Main(string[] args)
         {
             string path = ".\\Day1.txt";
-            Console.WriteLine(checkDepthIncreases(path));
+            List<int> values = Utility.ImportInput.ToIntList(path);
+            Console.WriteLine(checkDepthIncreases(values));
+            Console.WriteLine(CheckTripleDepthIncreases(values));
         }
-        private static int checkDepthIncreases(string path)
+
+        // Exercise 1
+        private static int checkDepthIncreases(List<int> values)
         {
-            IEnumerable<string> lines = File.ReadAllLines(@path);
-            int Increases = 0; // The first line will be an increase over the starting value
-            int prevDepth = Int32.Parse(lines.First());
-            foreach(string line in lines){
-                int depth = Int32.Parse(line);
-                Console.WriteLine(depth);
+            int Increases = 0;
+            int prevDepth = values.First(); // We load the initial depth instead of 0, the depth might be either negative or positive, who knows ?
+            foreach(int depth in values){
                 if (depth>prevDepth)
                     Increases++;
                 prevDepth = depth;
             }
             return Increases;
+        }
+
+        // Exercise 2
+        private static int CheckTripleDepthIncreases(List<int> values){
+            int[] valuesArray = values.ToArray();
+            int increases = 0;
+            int prevDepth = valuesArray[0]+valuesArray[1]+valuesArray[2];
+            for(int i=3;i<valuesArray.Length;i++)
+            {
+                int curDepth=prevDepth-valuesArray[i-3]+valuesArray[i];
+                if (curDepth>prevDepth)
+                    increases++;
+                prevDepth = curDepth;
+            }
+            
+            return increases;
         }
     }
 }
