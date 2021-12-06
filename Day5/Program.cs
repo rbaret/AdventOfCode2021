@@ -6,7 +6,7 @@ namespace Day5
 {
     class Program
     {
-        public struct segmentCoords
+        public struct segmentCoords // We create a structure to hold segment coordinates
         {
             public int x1;
             public int y1;
@@ -18,49 +18,97 @@ namespace Day5
             string path = "./input.txt";
             List<string> input = Utility.ImportInput.ToStringList(path);
             Console.WriteLine("Exercise 1 : " + Exercise1(input));
-            //Console.WriteLine("Exercise 2 : " + Exercise2(input));
+            Console.WriteLine("Exercise 2 : " + Exercise2(input));
         }
 
         public static int Exercise1(List<string> input)
         {
             List<segmentCoords> segmentsList = new List<segmentCoords>(parseCoordinates(input));
-            List<segmentCoords> trimmedSegmentsList = new List<segmentCoords>(removeDiagonals(segmentsList));
+            List<segmentCoords> trimmedSegmentsList = new List<segmentCoords>(removeDiagonals(segmentsList)); // we remove all the diagnals for this exercise
             int[,] lineMap = drawLines(trimmedSegmentsList);
             int overlappingPoints = countOverlappingPoints(lineMap);
 
             return overlappingPoints;
 
         }
+        public static int Exercise2(List<string> input)
+        {
+            List<segmentCoords> segmentsList = new List<segmentCoords>(parseCoordinates(input));
+            int[,] lineMap = drawLines(segmentsList);
+            int overlappingPoints = countOverlappingPoints(lineMap);
 
-        public static List<segmentCoords> parseCoordinates(List<string> segmentsCoordinates)
+            return overlappingPoints;
+
+        }
+
+        public static List<segmentCoords> parseCoordinates(List<string> segmentsCoordinates) // we create a list of all the segments and their coordinates
         {
             List<segmentCoords> segmentsCoordList = new List<segmentCoords>();
             foreach (string segment in segmentsCoordinates)
             {
 
-                string cleanedSegment = segment.Replace(" -> ", ",");
-                string[] coordinates = cleanedSegment.Split(',');
+                string cleanedSegment = segment.Replace(" -> ", ","); // Replacing the middle arrow in each line by a comma to split easily after
+                string[] coordinates = cleanedSegment.Split(','); // Breaking each line into 4 coordinates
                 segmentCoords buffer;
                 buffer.x1 = int.Parse(coordinates[0]);
                 buffer.y1 = int.Parse(coordinates[1]);
                 buffer.x2 = int.Parse(coordinates[2]);
                 buffer.y2 = int.Parse(coordinates[3]);
-                segmentsCoordList.Add(buffer);
+                segmentsCoordList.Add(buffer); // adding the newly created segment to the segments list
             }
             return segmentsCoordList;
         }
 
         public static int[,] drawLines(List<segmentCoords> mySegments)
         {
-            int[,] lineMap = new int[1000, 1000];
+            int[,] lineMap = new int[1000, 1000]; // This is the maximum array size needed. Not optimal as 99% of it will probably be empty
 
             foreach (segmentCoords segment in mySegments)
             {
-                int distancex = segment.x2 - segment.x1; // Measure segment's horizontal length
-                int distancey = segment.y2 - segment.y1; // Measure segment's vertical length
-                int startx, starty = 0; // Starting point to trace line. Only going from left to right, upwards
-                startx = (distancex >= 0) ? segment.x1 : segment.x2; // Determining horizontal starting point
-                starty = (distancey >= 0) ? segment.y1 : segment.y2; // Determining vertical starting point
+                int distancex = Math.Abs(segment.x2 - segment.x1); // Measure segment's horizontal length
+                int distancey = Math.Abs(segment.y2 - segment.y1); // Measure segment's vertical length
+                int startx, starty = 0; // Starting point to trace line. Only going from left to right
+                int direction=0;
+                // Looking for starting point
+                if (segment.x1 < segment.x2) // Segment coordinates go from left to right
+                {
+                    startx = segment.x1;
+                    starty = segment.y1;
+                    // We want to trace the diagonal from left to right but we need to know if we have to go upwards or downwards
+                    // Determining direction. Default is going flat (but not used in tat case, maybe later if I want to have a generic drawing method)
+                    if (segment.y1 < segment.y2)
+                        direction = 1;
+
+                    else
+                        direction = -1;
+                }
+                else if (segment.x1 > segment.x2) // Segment coordinates go from right to left
+                {
+                    startx = segment.x2;
+                    starty = segment.y2;
+                    // We want to trace the diagonal from left to right but we need to know if we have to go upwards or downwards
+                    // Determining direction
+                    if (segment.y1 > segment.y2)
+                        direction = 1;
+
+                    else
+                        direction = -1;
+                }
+                else // we have a vertical segment
+                { 
+                    startx = segment.x1; // the startx is not important here, it won change
+                    if (segment.y1 < segment.y2) // Checking to move upwards
+                    {
+                        starty = segment.y1;
+                    }
+                    else {
+                         starty = segment.y2;
+                    }
+                }
+                //
+                // Line drawing
+                //
+
                 if (distancey == 0) // Horizontal segment
                 {
                     for (int x = startx; x <= startx + distancex; x++)
@@ -72,15 +120,15 @@ namespace Day5
                 {
                     for (int y = starty; y <= starty + distancey; y++)
                     {
-                        lineMap[segment.x1, y]++;
+                        lineMap[startx, y]++;
                     }
                 }
-                else // Diagonal segment
+                else // Diagonal segment. if it reaches this point x and y will vary 
                 {
                     int yOffset = 0;
                     for (int x = startx; x <= startx + distancex; x++)
                     {
-                        lineMap[x, starty + yOffset]++;
+                        lineMap[x, starty + (yOffset*direction)]++;
                         yOffset++;
                     }
                 }
