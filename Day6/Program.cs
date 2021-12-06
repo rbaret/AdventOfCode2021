@@ -68,7 +68,7 @@ namespace Day6
                 { // All the other fishes see their timer decreased by moving them 1 index down in the table.
                     fishesByDaysLeft[j] = fishesByDaysLeft[j + 1];
                 }
-                fishesByDaysLeft[6] += newFishes; // Everytime we span a fish, its "parent" timer goes from 0 to 6, so we add all the new parents to the 6
+                fishesByDaysLeft[6] += newFishes; // Everytime we spawn a fish, its "parent" timer goes from 0 to 6, so we add all the new parents to the 6
                 fishesByDaysLeft[8] = newFishes; // And all the new babies go to 8 (replacement not addition because all the previous 8 went to 7 and we did not reset the value)
             }
             foreach (long fishCount in fishesByDaysLeft)
