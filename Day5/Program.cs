@@ -128,8 +128,8 @@ namespace Day5
                     int yOffset = 0;
                     for (int x = startx; x <= startx + distancex; x++)
                     {
-                        lineMap[x, starty + (yOffset*direction)]++;
-                        yOffset++;
+                        lineMap[x, starty + (yOffset*direction)]++; // Direction being -1 or 1 it only allows to invert the sign of the y increment to go upwards or downwards
+                        yOffset++; 
                     }
                 }
 
@@ -137,7 +137,7 @@ namespace Day5
             return lineMap; 
         }
 
-        public static List<segmentCoords> removeDiagonals(List<segmentCoords> segmentsList)
+        public static List<segmentCoords> removeDiagonals(List<segmentCoords> segmentsList) // returns only the segments with x1=x2 or y1=y2
         {
             List<segmentCoords> trimmedSegmentsList = new List<segmentCoords>();
             foreach (segmentCoords segment in segmentsList)
@@ -149,7 +149,7 @@ namespace Day5
             }
             return trimmedSegmentsList;
         }
-        public static int countOverlappingPoints(int[,] lineMap)
+        public static int countOverlappingPoints(int[,] lineMap) // goes through the whole table and returns the values >=2
         {
             int overlappingLinesPoints = 0;
             for (int i = 0; i < lineMap.GetLength(0); i++)
