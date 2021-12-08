@@ -53,7 +53,6 @@ namespace Day7
                 }
                 currentValue++;
             } while (currentValue <= max && buffer <= previousSum);
-            Console.WriteLine ("Iterations :"+(currentValue-min));
             return previousSum;
         }
 
