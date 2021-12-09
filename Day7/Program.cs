@@ -41,20 +41,18 @@ namespace Day7
             int min = input[0];
             int max = input[input.Length - 1];
             int currentValue = min;
-            long previousSum = (long)((long)sumInt(min,max) * (long)(input.Length - 1)); // Highest value possible is the last value times the size of the list -1 (table full of 0 and a distance of the highest value stored in last cell)
-            long buffer = 0;
-            for(int i=min;i<=max;i++){
+            long previousSum = (long)((long)sumInt(min, max) * (long)(input.Length - 1)); // Highest value possible is the last value times the size of the list -1 (table full of 0 and a distance of the highest value stored in last cell)
+            long buffer = previousSum;
+            do
+            {
+                previousSum = buffer;
                 buffer = 0;
                 foreach (int crab in input)
                 {
                     buffer += sumInt(crab, currentValue);
                 }
                 currentValue++;
-                if(buffer<=previousSum)
-                    previousSum = buffer;
-                
-            }
-
+            } while (currentValue <= max && buffer <= previousSum);
             return previousSum;
         }
 
@@ -62,7 +60,7 @@ namespace Day7
         {
             int distance = Math.Abs(a - b); // Calculate the distance
             int mean = (distance) / 2; // Used for a the formula to sum up quickly 
-            long meanUpped = (long)Math.Ceiling((double)distance/2); // Rounded mean to the upper value
+            long meanUpped = (long)Math.Ceiling((double)distance / 2); // Rounded mean to the upper value
             long finalSum;
             if (distance % 2 == 0)
             {
