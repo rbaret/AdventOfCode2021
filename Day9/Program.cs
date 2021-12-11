@@ -10,18 +10,9 @@ namespace Day9
         static void Main(string[] args)
         {
             string path = "./input.txt";
-            Stopwatch myStopwatch = new Stopwatch();
-            myStopwatch.Start();
             char[][] input = Utility.ImportInput.ToCharArray(path); // I should have used an int[][] bt didn want to waste time parsing
-            Console.WriteLine("Data loading time : " + myStopwatch.Elapsed);
-            myStopwatch.Restart();
             Console.WriteLine("Exercise 1 : " + Exercise1(ref input));
-            myStopwatch.Stop();
-            Console.WriteLine("Exercise 1 duration : " + myStopwatch.Elapsed);
-            myStopwatch.Start();
             Console.WriteLine("Exercise 2 : " + Exercise2(ref input));
-            myStopwatch.Stop();
-            Console.WriteLine("Exercise 2 duration : " + myStopwatch.Elapsed);
         }
 
         public static int Exercise1(ref char[][] depthMap)
