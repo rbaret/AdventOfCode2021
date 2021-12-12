@@ -30,5 +30,21 @@ namespace Utility
             }
             return myArray;
         }
+
+        public static int[,] ToIntMatrix(string @path){
+            string[] fileContent = File.ReadAllLines(@path);
+            int[,] myArray = new int [fileContent.Length,fileContent[0].Length];
+            int lineIndex = 0;
+            foreach(string line in fileContent){
+                int i=0;
+                foreach(char c in line)
+                {
+                    myArray[lineIndex,i] = c-48; // Converts 
+                    i++;
+                }
+                lineIndex++;
+            }
+            return myArray;
+        }
     }
 }
