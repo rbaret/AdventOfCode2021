@@ -16,7 +16,7 @@ namespace Day13
         }
 
         /// <summary>Solves Exercise1 : fold the instructions once</summary>
-        /// <returns>The answer to the exercise as a long</summary>
+        /// <returns>The answer to the exercise as an int</summary>
         public static int Exercise1(List<string> input)
         {
             List<Tuple<int, int>> dotsList = new List<Tuple<int, int>>();
@@ -28,7 +28,6 @@ namespace Day13
         }
 
         /// <summary>Solves Exercise2 : fold the paper along all instructions</summary>
-        /// <returns>The answer to the exercise as a char[][]</summary>
         public static void Exercise2(List<string> input)
         {
             List<Tuple<int, int>> dotsList = new List<Tuple<int, int>>();
@@ -121,6 +120,7 @@ namespace Day13
             }
         }
 
+        ///<summary>Displays the final code by creating a small dot matrix</summary>
         public static void displayDots(List<Tuple<int, int>> dotsList)
         {
             
