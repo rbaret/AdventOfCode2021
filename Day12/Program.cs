@@ -10,50 +10,75 @@ namespace Day12
         {
             string path = "./input.txt";
             List<string> input = Utility.ImportInput.ToStringList(path);
-            Console.WriteLine(Exercise1(input));
+            Dictionary<string, List<string>> map = GenerateMap(input);
+            Console.WriteLine(Exercise1(map));
             //Console.WriteLine(Exercise2(input));
         }
 
-        public static long Exercise1(List<string> input)
+        public static int Exercise1(Dictionary<string, List<string>> map)
         {
-            Dictionary<string, Cave> map = GenerateMap(input);
-            long paths = visitCaves(map);
-            return 0;
+            List<Stack<string>> pathsList = new List<Stack<string>>();
+            List<string> visited = new List<string>();
+            Stack<string> path = new Stack<string>();
+            visitCaves(ref pathsList, path, visited, "start", map);
+            int answer = pathsList.Count;
+            return answer;
         }
 
-        public static long visitCaves(Dictionary<string,Cave> map)
+        public static int Exercise2(Dictionary<string, List<string>> map)
         {
-            List<Stack<Cave>> paths = new List<Stack<Cave>>();
-            foreach(KeyValuePair<string,Cave> current in map)
+            List<Stack<string>> pathsList = new List<Stack<string>>();
+            List<string> visited = new List<string>();
+            Stack<string> path = new Stack<string>();
+            visitCaves(ref pathsList, path, visited, "start", map);
+            int answer = pathsList.Count;
+            return answer;
+        }
+
+        public static void visitCaves(ref List<Stack<string>> pathsList, Stack<string> path, List<string> visited, string caveToVisit, Dictionary<string, List<string>> map)
+        {
+            path.Push(caveToVisit);
+            if (caveToVisit == "end")
             {
-                Stack<Cave> path = new Stack<Cave>();
-                path.Push(map["start"]);
-                
-
+                pathsList.Add(new Stack<string>(path));
+                path.Pop();
+                return;
             }
+            if (caveToVisit == caveToVisit.ToLower())
+            {
+                visited.Add(caveToVisit);
+            }
+            foreach (string nextCave in map[caveToVisit])
+            {
+                if (!visited.Contains(nextCave))
+                {
+                    visitCaves(ref pathsList, path, visited, nextCave, map);
+                }
+            }
+            path.Pop();
+            visited.Remove(caveToVisit);
+            return;
 
-
-            return 0;
         }
 
-        public static Dictionary<string, Cave> GenerateMap(List<string> caveLinks)
+        public static Dictionary<string, List<string>> GenerateMap(List<string> caveLinks)
         {
-            Dictionary<string, Cave> map = new Dictionary<string, Cave>();
+            Dictionary<string, List<String>> map = new Dictionary<string, List<string>>();
             foreach (string line in caveLinks)
             {
                 Tuple<string, string> link = parseLink(line);
-                Cave cave1 = new Cave(link.Item1);
-                Cave cave2 = new Cave(link.Item1);
-                if (!map.ContainsValue(cave1))
+                string cave1 = link.Item1;
+                string cave2 = link.Item2;
+                if (!map.ContainsKey(cave1))
                 {
-                    map.Add(cave1.name,cave1);
+                    map.Add(cave1, new List<string>());
                 }
-                if (!map.ContainsValue(cave2))
+                if (!map.ContainsKey(cave2))
                 {
-                    map.Add(cave2.name,cave2);
+                    map.Add(cave2, new List<string>());
                 }
-                cave1.ConnectCaves(cave2);
-                cave2.ConnectCaves(cave1);
+                map[cave1].Add(cave2);
+                map[cave2].Add(cave1);
             }
             return map;
         }
@@ -65,38 +90,5 @@ namespace Day12
             return caveLinkTuple;
         }
     }
-    public class Cave : IEquatable<Cave>
-    {
-        private List<Cave> neighbors;
-        private bool visited;
 
-        public string name { get; set; }
-
-
-        public Cave(string caveName)
-        {
-            name = caveName;
-        }
-
-        public bool Equals(Cave b)
-        {
-            return (this.name == b.name);
-        }
-
-        public void ConnectCaves(Cave n)
-        {
-
-            if (!this.neighbors.Contains(n))
-            {
-                this.neighbors.Add(n);
-                n.ConnectCaves(this);
-            }
-
-        }
-
-        public bool IsVisited()
-        {
-            return visited;
-        }
-    }
 }
