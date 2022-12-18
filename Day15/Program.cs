@@ -56,7 +56,7 @@ namespace Day15
     {
         static void Main(string[] args)
         {
-            string path = "test_input.txt";
+            string path = "input.txt";
             int[,] riskMap = Utility.ImportInput.ToIntMatrix(path);
             Part1(riskMap);
         }
@@ -94,7 +94,7 @@ namespace Day15
                     {
                         // If the node is already in the unvisited list, update the parent if the risk is lower
                         int newCost = current.cost + n.risk;
-                        if(newCost < n.cost)
+                        if(newCost < unvisited.Where(x => x.Equals(n)).First().cost)
                         {
                             unvisited.Where(x => x.Equals(n)).First().cost = newCost;
                             unvisited.Where(x => x.Equals(n)).First().parent = current;
